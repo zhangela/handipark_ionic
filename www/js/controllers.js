@@ -1,12 +1,12 @@
-angular.module('starter.controllers', [])
+angular.module('handipark.controllers', [])
 
 .controller('MapCtrl', function($scope, $ionicLoading) {
   $scope.mapCreated = function(map) {
     $scope.map = map;
+    $scope.centerOnMe();
   };
 
   $scope.centerOnMe = function () {
-    console.log("Centering");
     if (!$scope.map) {
       return;
     }
@@ -17,11 +17,10 @@ angular.module('starter.controllers', [])
     });
 
     navigator.geolocation.getCurrentPosition(function (pos) {
-      console.log('Got pos', pos);
       $scope.map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
       $scope.loading.hide();
     }, function (error) {
-      alert('Unable to get location: ' + error.message);
+      console.log('Unable to get location: ' + error.message);
     });
   };
 });

@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.directives'])
+angular.module('handipark', ['ionic', 'handipark.controllers', 'handipark.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
