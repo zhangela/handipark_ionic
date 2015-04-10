@@ -23,4 +23,5 @@ angular.module('handipark.controllers', [])
       console.log('Unable to get location: ' + error.message);
     });
   };
+
 });
