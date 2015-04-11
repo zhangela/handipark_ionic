@@ -23,9 +23,6 @@
     <!-- Firebase -->
     <script src="https://cdn.firebase.com/js/client/1.0.17/firebase.js"></script>
 
-    <!-- Firebase Simple Login -->
-    <script src="https://cdn.firebase.com/js/simple-login/1.6.2/firhandiparkebase-simple-login.js"></script>
-
     <!-- AngularFire -->
     <script src="https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.js"></script>
 
@@ -41,7 +38,9 @@
     </ion-header-bar>
 
     <ion-content scroll="false">
-      <map on-create="mapCreated(map)"></map>
+      <map on-create="mapCreated(map)">
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+      </map>
     </ion-content>
 
     <ion-footer-bar class="bar-stable">

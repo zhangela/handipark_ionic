@@ -22,17 +22,6 @@ angular.module('handipark.directives', [])
           return false;
         });
 
-        var placeMarker = function (location) {
-          var marker = new google.maps.Marker({
-              position: location,
-              map: map
-          });
-        };
-
-        google.maps.event.addListener(map, 'click', function(event) {
-          placeMarker(event.latLng);
-        });
-
       }
 
       if (document.readyState === "complete") {
