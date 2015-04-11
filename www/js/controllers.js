@@ -4,48 +4,76 @@ angular.module('handipark.controllers', ['firebase'])
 
   var ref = new Firebase("https://sizzling-heat-4912.firebaseio.com");
   var data = $firebaseObject(ref);
+
   $scope.parkingSpots = $firebaseArray(ref.child('parkingSpots'))
   data.$bindTo($scope, "data");
-
-  // this waits for the data to load and then logs the output. Therefore,
-  // data from the server will now appear in the logged output. Use this with care!
-  data.$loaded()
-    .then(function() {
-      _.each($scope.data.parkingSpots, function(parkingSpot, index, list) {
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(parkingSpot.lat, parkingSpot.lng),
-            map: $scope.map
-        });
-      });
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
-
 
   $scope.mapCreated = function(map) {
     $scope.map = map;
     $scope.directionsDisplay = new google.maps.DirectionsRenderer();
     $scope.directionsService = new google.maps.DirectionsService();
     $scope.directionsDisplay.setMap($scope.map);
-
     $scope.centerOnMe();
+    var markers = [];
+
+    // Add a marker to the map and push to the array.
+    function addMarker(location) {
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map
+      });
+      markers.push(marker);
+      return marker;
+    }
+
+    // Sets the map on all markers in the array.
+    function setAllMap(map) {
+      for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+      }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+      setAllMap(null);
+    }
+
+    // Shows any markers currently in the array.
+    function showMarkers() {
+      setAllMap(map);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+      clearMarkers();
+      markers = [];
+    }
+
+    var addParkingSpot = function(lat, lng) {
+      console.log('$scope.data.parkingSpots', $scope.data.parkingSpots);
+      $scope.parkingSpots.$add({
+        lat: lat,
+        lng: lng
+      });
+    };
+
+
+    $scope.$watchCollection('parkingSpots', function(newParkingSpots, oldParkingSpots) {
+      clearMarkers();
+      deleteMarkers();
+
+      _.each($scope.parkingSpots, function(parkingSpot, index, list) {
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(parkingSpot.lat, parkingSpot.lng),
+            map: $scope.map
+        });
+      });
+    });
+
 
     google.maps.event.addListener($scope.map, 'click', function(event) {
 
-      var marker = new google.maps.Marker({
-          position: event.latLng,
-          map: $scope.map
-      });
-
-      var addParkingSpot = function(lat, lng) {
-        console.log('$scope.data.parkingSpots', $scope.data.parkingSpots);
-        $scope.parkingSpots.$add({
-          lat: lat,
-          lng: lng
-        });
-      };
-
+      var marker = addMarker(event.latLng);
       addParkingSpot(event.latLng.lat(), event.latLng.lng());
 
       google.maps.event.addListener(marker, 'click', function(event) {
